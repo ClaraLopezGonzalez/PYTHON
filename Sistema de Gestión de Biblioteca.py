@@ -1,7 +1,4 @@
 # Práctica final curso Python: Sistema de Gestión de Biblioteca.
-
-# Definimos la clase de este ejercicio.
-
 class Libro:
 
     def __init__(self, titulo, autor, isbn):
@@ -9,23 +6,12 @@ class Libro:
         self.autor = autor
         self.isbn = isbn
         self.disponible = True 
-        Libro.biblioteca.append(self)
-
+        
     def __str__(self):
         estado = "Sí" if self.disponible else "No"
         return f"-Título: {self.titulo} ({self.autor}) -ISBN: {self.isbn} -Disponible: {estado}"
-    
-    # Lista que representa la biblioteca
-    
-    biblioteca = [] 
-    
-    # Este método agrega un nuevo libro a la biblioteca.
 
-    def agregar(self): 
-        print("Libro agregado con éxito.")
-
-    # Este método cambia el estado de disponible a False si el libro está disponible.
-
+    # Cambia el estado de disponible a False si el libro está disponible.
     def prestar(self):
         if self.disponible:
             self.disponible = False
@@ -33,37 +19,48 @@ class Libro:
         else:
             print(f"El libro '{self.titulo}' no se encuentra disponible en este momento.")
 
-    # Este método cambia el estado de disponible a True si estaba prestado.
-
+    # Cambia el estado de disponible a True si estaba prestado.
     def devolver(self):
         if not self.disponible:
             self.disponible = True
             print(f"El libro '{self.titulo}' ha sido devuelto correctamente")
         else:
             print(f"El libro '{self.titulo}' ya estaba disponible")
-    
-    # Este método muestra una lista con todos los libros de la biblioteca y sus datos. 
+ 
+class Biblioteca:
 
-    @classmethod
-    def mostrar(cls):
-        if not cls.biblioteca:
+    def __init__(self, libros):
+        self.libros = libros
+
+    # Agrega un nuevo libro a la biblioteca.
+    def agregar(self, libro): 
+        self.libros.append(libro)
+        print("Libro agregado con éxito.")
+
+    # Muestra una lista con todos los libros de la biblioteca y sus datos. 
+    def mostrar(self):
+        if not self.libros:
             print("No hay libros en la Biblioteca")
         else:
             print("Libros en la Biblioteca")
-            for libro in cls.biblioteca:
+            for libro in self.libros:
                 print(libro)
                 
-    # Este método busca un libro en concreto por su ISBN y lo muestra con todos sus datos.
-
-    @classmethod
-    def buscar(cls, isbn):
-        for libro in cls.biblioteca:
+    # Busca un libro en concreto por su ISBN y lo muestra con todos sus datos.
+    def buscar(self, isbn):
+        for libro in self.libros:
             if libro.isbn == isbn:
                 print(f"Libro encontrado:\n{libro}")
                 return
         print(f"No se encontró ningún libro con el ISBN {isbn}.")
 
-def menu():
+def main():
+
+    biblioteca = Biblioteca(
+        [Libro('La sombra del viento', 'Carlos Ruíz Zafón', '0001'),
+         Libro('La novia gitana', 'Carmen Mola', '0002'),
+         Libro('De sangre y cenizas', 'Jennifer L. Armentrout', '0003')])
+
     print("Bienvenido al Sistema de Gestión de Biblioteca")
     while True:
         print("1. Agregar libro")
@@ -80,11 +77,11 @@ def menu():
             autor = input("Autor: ")
             isbn = input("ISBN: ")
             libro = Libro(titulo, autor, isbn)
-            libro.agregar() 
+            biblioteca.agregar(libro)
 
         elif opcion == "2":
             isbn = input("Ingresa el ISBN: ")
-            libro = next((libro for libro in Libro.biblioteca if libro.isbn == isbn), None)
+            libro = next((libro for libro in biblioteca.libros if libro.isbn == isbn), None)
             if libro:
                 libro.prestar()
             else:
@@ -92,18 +89,18 @@ def menu():
 
         elif opcion == "3":
             isbn = input("Ingresa el ISBN: ")
-            libro = next((libro for libro in Libro.biblioteca if libro.isbn == isbn), None)
+            libro = next((libro for libro in biblioteca.libros if libro.isbn == isbn), None)
             if libro:
                 libro.devolver()
             else:
                 print("Libro no encontrado.")
 
         elif opcion == "4":
-            Libro.mostrar() 
+            biblioteca.mostrar() 
 
         elif opcion == "5":
             isbn = input("Ingresa el ISBN: ")
-            Libro.buscar(isbn) 
+            biblioteca.buscar(isbn) 
 
         elif opcion == "6":
             print("Gracias por su visita. ¡Esperamos verle pronto!")
@@ -113,7 +110,5 @@ def menu():
 
  
 if __name__ == "__main__":
-    Libro('La sombra del viento', 'Carlos Ruíz Zafón', '0001')
-    Libro('La novia gitana', 'Carmen Mola', '0002')
-    Libro('De sangre y cenizas', 'Jennifer L. Armentrout', '0003')
-    menu()
+    main()
+

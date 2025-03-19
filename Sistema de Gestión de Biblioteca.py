@@ -21,8 +21,7 @@ class Libro:
     
     # Este método agrega un nuevo libro a la biblioteca.
 
-    def agregar(self):
-        Libro.biblioteca.append(self) 
+    def agregar(self): 
         print("Libro agregado con éxito.")
 
     # Este método cambia el estado de disponible a False si el libro está disponible.
